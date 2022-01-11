@@ -55,7 +55,7 @@ bookmarks.post("/", (request, response) => {
     //BONUS: Send a 201 ("Created") HTTP status code
         // it means yes we successfully created it will not have you do error, any error handling on this one because they really talked about how to handle what can go wrong with a post.
         bookmarksList.push(request.body)
-        response.status(201).json(bookmarksList[bookmarksList.length - 1])
+        response.status(201).json(bookmarksList)
 })
 
 //Export the bookmarks controller/router so that app can delegate the /bookmarks route to it
