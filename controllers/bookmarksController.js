@@ -43,7 +43,7 @@ bookmarks.get("/:index", (request, response) => {
 // A request to POST /bookmarks will need to include WHAT to ADD
 // POST to /bookmarks... but post WHAT? post THIS to bookmarks
 bookmarks.post("/", (request, response) => {
-    console.log(request.body)
+    console.log("POST to /bookmarks")
     //request.body does not handle json. It's handling middleware.
     //We are going to say, hey, app. js, whenever a request comes in. Here's a purse or for JSON to handle.
     // every server is going to need this, it's going to need some way to handle JSON there are different ways to handle JSON, but Express comes with a built in way to handle JSON,
@@ -54,9 +54,44 @@ bookmarks.post("/", (request, response) => {
     //Send back the whole bookmarks array as json
     //BONUS: Send a 201 ("Created") HTTP status code
         // it means yes we successfully created it will not have you do error, any error handling on this one because they really talked about how to handle what can go wrong with a post.
-        bookmarksList.push(request.body)
+
+        // HOW TO CHECK IF THIS new bookmark ALREADY EXISTS BEFORE PUSHING ???
+        //So there are libraries that will do that, that will examine the objects, a nest, you know every nested property and see if it's the exact same. You could also write a function to do that, to check all the properties of an object and see if they're the same.
+        bookmarksList.push(request.body);
         response.status(201).json(bookmarksList)
 })
+
+// One problem with the above approach if we restart the server the data is gone!
+//We'll fix that with databases sot hat our data sticks around even if our server crashes
+//The technical term for this is persistence.
+
+//DELETE a specific bookmark
+bookmarks.delete("/:index", (request, response) => {
+    console.log("DELETE to /:index")
+    const { index } = request.params
+    if(bookmarksList[index]) {
+        // `.splice` returns an array of the values removed, so we can do either of the following:
+        //Destructure array, which selects the first object in the array like so
+        const [ deletedBookmark ] = bookmarksList.splice(index, 1)
+        // response.json(bookmarksList)
+        response.status(200).json(deletedBookmark)
+    } else {
+        response.status(404).json({error: "Bookmark not found"})
+    }
+})
+
+// UPDATING 
+bookmarks.put("/:index", (request, response) => {
+    const { index } = request.params;
+    bookmarksList[index] = request.body
+    if (bookmarksList[index]) {
+        response.status(200).json(bookmarksList)
+    } else {
+        response.status(404).json({error: "Bookmark not found"})
+    }
+})
+//IN PATCH - you'll just change a specific key/value pair in object
+//IN PUT - you'll be replacing the whole object with something new 
 
 //Export the bookmarks controller/router so that app can delegate the /bookmarks route to it
 module.exports = bookmarks;
