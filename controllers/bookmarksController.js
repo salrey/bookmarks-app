@@ -1,6 +1,5 @@
 //Dependencies 
 const express = require("express")
-const app = require("../app")
 // .Router creates a new controller that handles a subroute. 
 // In this case, it will handle everything that starts with /bookmarks
 // bookmarks is like a subApp that handles one route
